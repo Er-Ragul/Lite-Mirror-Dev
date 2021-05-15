@@ -2,6 +2,8 @@
 let displaySource
 let peer
 let dc
+let widthSetter = 0
+let hightSetter = 0
 
 /* Import or Initialization */
 let socket = io.connect('/')
@@ -23,7 +25,7 @@ desktopCapturer.getSources({ types: ['window', 'screen'] })
 socket.on('YourId', (myId) => {
     console.log('Received ID from server')
     peer = new Peer('software', {
-        host: 'lite-mirror-dev.herokuapp.com',
+        host: 'localhost',
         port: 443,
 	    path: '/peerjs',
         secure: true,
@@ -45,21 +47,20 @@ socket.on('YourId', (myId) => {
 socket.on('makeClientCall', (client_id, cliWidth, cliHeight) => {
     console.log('Call Requested from Client')
     console.log('Client ID : ', client_id)
-    console.log('Requested Width : ', cliWidth)
-    console.log('Requested Height : ', cliHeight)
     startShare(client_id, cliWidth, cliHeight)
 })
 
 /* Function to call client with media stream  ---> step : 2 */
-function startShare(client_id, cliWidth, cliHeight){
+function startShare(client_id, reqWidth, reqHeight){
+    console.log('Media : ', reqWidth, reqHeight)
     navigator.mediaDevices.getUserMedia({video: 
         {
             mandatory: {              
                 chromeMediaSource: 'desktop',
                 chromeMediaSourceId: displaySource,
                 // Working here -------------------------------------------------------------------> //
-                maxWidth: cliWidth, // Client's inner width of a browser
-                maxHeight: cliHeight // Clients's inner Height of a browser
+                maxWidth: reqWidth,
+                maxHeight: reqHeight
             },
             cursor: 'never'
         }, 
@@ -89,7 +90,7 @@ const dataConnection = () => {
 
 /* Mouse Click (Single click) function */
 const click = (command) => {
-    if(typeof(command) === "object"){
+    if(typeof(command) === "object" && Object.keys(command).length === 2){
         console.log(typeof(command))
         console.log('X : ' + command.x)
         console.log('Y : ' + command.y)                    
@@ -99,13 +100,17 @@ const click = (command) => {
             console.log('Mouse pointer updated !');
         });
     }
-    else if(typeof(command) === "string"){
-        console.log('Keys :', command)
-        var pencil = 'write' + ',' + command
+    else if(typeof(command) === "object" && Object.keys(command).length === 1){
+        console.log('Keys :', command.nmChar)
+        var pencil = 'write' + ',' + command.nmChar
         fs.writeFile('./interface/key_events.txt', pencil, function (err) {
             if (err) throw err;
             console.log('String updated !');
         });
+    }
+    else if(typeof(command) === "string"){
+        startShare('143', 1280, 720)
+        console.log('HD Request')
     }
 }
 
