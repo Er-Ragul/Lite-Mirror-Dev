@@ -2,10 +2,7 @@ const express = require('express')
 const app = express()
 const fs = require('fs')
 const path = require('path')
-const server = require('https').Server({
-	key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
-	cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
-}, app)
+const server = require('https').Server(app)
 const { ExpressPeerServer } = require('peer')
 const peerServer = ExpressPeerServer(server, {
     debug: true
