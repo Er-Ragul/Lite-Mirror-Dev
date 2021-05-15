@@ -59,7 +59,9 @@ function startShare(client_id, cliWidth, cliHeight){
                 chromeMediaSourceId: displaySource,
                 // Working here -------------------------------------------------------------------> //
                 maxWidth: 1280, //cliWidth
-                maxHeight: 720 //cliHeight
+                maxHeight: 720, //cliHeight
+		minWidth: cliWidth,
+		minHeight: cliHeight
             },
             cursor: 'never'
         }, 
