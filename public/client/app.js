@@ -7,6 +7,7 @@ let ms_height = 1080
 let display_width = 0
 let display_height = 0
 let count = 0
+let HD = false
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -26,7 +27,7 @@ const startConnection = () => {
         // Working here -------------------------------------------------------------------> //
         socket.emit('makeCall', token, window.innerWidth, window.innerHeight) 
         peer = new Peer(token.toString(), {
-            host: 'lite-mirror-dev.herokuapp.com',
+            host: 'localhost',
             port: 443,
             path: '/peerjs',
             secure: true,
@@ -55,6 +56,7 @@ const receiveShare = () => {
             count++
             if(count === 2){
                 createDisplay(stream)
+                count = 0
             }
             else {
                 console.log(`Stream received for ${count} times`)
@@ -72,15 +74,22 @@ const receiveShare = () => {
 /* Function to create display and sizing */
 const createDisplay = (stream) => {
     source.srcObject = stream
-    source.play()
     source.style.visibility = 'visible'
 }
 
 source.addEventListener('loadedmetadata', () => {
     display_width = source.videoWidth 
+    source.width = display_width
     console.log(display_width);
+    /* --- */
     display_height = source.videoHeight
+    source.height = display_height
     console.log(display_height);
+    source.play()
+    if(HD === false){
+        dc.send('hd')
+        HD = true
+    }
 });
 
 /* Mouse onclick event function */
@@ -102,7 +111,7 @@ const mouseClick = (e) => {
 const keyEvent = (e) => {
     var keys = e.which || e.keyCode;
     try {
-        dc.send(String.fromCharCode(keys))
+        dc.send({nmChar: String.fromCharCode(keys)})
     } catch (error) {
         console.log('Peer not initiated')
     }
