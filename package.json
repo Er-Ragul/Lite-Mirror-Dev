@@ -1,0 +1,18 @@
+{
+  "name": "lite-mirror-suite",
+  "version": "1.0.0",
+  "description": "Lite-Mirror-Suite - \"Screen Sharing Application\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Ragul.H, B.Tech - Information Technology",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "peer": "^0.6.1",
+    "socket.io": "^4.0.2"
+  }
+}
