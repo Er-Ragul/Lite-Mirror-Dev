@@ -58,10 +58,8 @@ function startShare(client_id, cliWidth, cliHeight){
                 chromeMediaSource: 'desktop',
                 chromeMediaSourceId: displaySource,
                 // Working here -------------------------------------------------------------------> //
-                maxWidth: 1280, //cliWidth
-                maxHeight: 720, //cliHeight
-		minWidth: cliWidth,
-		minHeight: cliHeight
+                maxWidth: cliWidth, // Client's inner width of a browser
+                maxHeight: cliHeight // Clients's inner Height of a browser
             },
             cursor: 'never'
         }, 
