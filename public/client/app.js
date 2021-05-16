@@ -24,7 +24,7 @@ const startConnection = () => {
         // Working here -------------------------------------------------------------------> //
         socket.emit('makeCall', token.toString(), window.innerWidth, window.innerHeight) 
         peer = new Peer(token.toString(), {
-            host: 'localhost',
+            host: 'lite-mirror-dev.herokuapp.com',
             port: 443,
             path: '/peerjs',
             secure: true,
@@ -32,7 +32,7 @@ const startConnection = () => {
                 'iceServers': [
                        { url: 'stun:stun1.l.google.com:19302' },
                        {
-                           url: 'turn:3.131.158.239:3478?transport=udp',
+                           url: 'turn:3.19.55.3:3478?transport=udp',
                            credential: 'ragul',
                            username: 'ragul'
                        }]
