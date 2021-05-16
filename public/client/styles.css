@@ -18,7 +18,11 @@ body {
     transform: translate(-50%, -50%);
 }
 
-/* Default video (canvas) display will be none */
+/*In Default display will be none */
 #display {
     visibility: hidden;
+}
+
+video {
+    object-fit: fill;
 }
