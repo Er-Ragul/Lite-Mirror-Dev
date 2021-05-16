@@ -25,7 +25,7 @@ desktopCapturer.getSources({ types: ['window', 'screen'] })
 socket.on('YourId', (myId) => {
     console.log('Received ID from server')
     peer = new Peer('software', {
-        host: 'lite-mirror-dev.herokuapp.com',
+        host: 'localhost',
         port: 443,
 	    path: '/peerjs',
         secure: true,
@@ -58,9 +58,10 @@ function startShare(client_id, reqWidth, reqHeight){
             mandatory: {              
                 chromeMediaSource: 'desktop',
                 chromeMediaSourceId: displaySource,
-                // Working here -------------------------------------------------------------------> //
-                maxWidth: reqWidth,
-                maxHeight: reqHeight
+                // Working here ---------- Full HD Display
+                maxWidth: 1920,
+                maxHeight: 1080
+                // ------------------------------------->
             },
             cursor: 'never'
         }, 
@@ -107,10 +108,6 @@ const click = (command) => {
             if (err) throw err;
             console.log('String updated !');
         });
-    }
-    else if(typeof(command) === "string"){
-        startShare('143', 1280, 720)
-        console.log('HD Request')
     }
 }
 
