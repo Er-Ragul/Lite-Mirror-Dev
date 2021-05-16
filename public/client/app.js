@@ -119,6 +119,17 @@ const touchEvent = (e) => {
     dc.send(pointer)
 }
 
+/* Touch double tab event function */
+let touchDoubleTab = 0
+const touchTabEvent = () => {
+    touchDoubleTab = touchDoubleTab + 1
+    if(touchDoubleTab === 2){
+        let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        dc.send(pointerClick)
+        touchDoubleTab = 0
+    }
+}
+
 /* Keyboard event function */
 const keyEvent = (e) => {
     var keys = e.which || e.keyCode;
