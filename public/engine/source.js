@@ -25,9 +25,9 @@ desktopCapturer.getSources({ types: ['window', 'screen'] })
 socket.on('YourId', (myId) => {
     console.log('Received ID from server')
     peer = new Peer('software', {
-        host: 'localhost',
+        host: 'lite-mirror-suite.herokuapp.com',
         port: 443,
-	    path: '/peerjs',
+	path: '/peerjs',
         secure: true,
         config: {
             'iceServers': [
