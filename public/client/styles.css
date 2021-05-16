@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Wrapper design */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Token box design */
+.tokenBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/*In Default display will be none */
+#display {
+    visibility: hidden;
+}
+
+video {
+    object-fit: fill;
+}
