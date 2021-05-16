@@ -4,10 +4,7 @@ let peer
 let dc
 let ms_width = 1920
 let ms_height = 1080
-let display_width = 0
-let display_height = 0
 let count = 0
-let HD = false
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -55,11 +52,9 @@ const receiveShare = () => {
         call.on('stream', (stream) => {
             count++
             if(count === 2){
+                console.log(`Stream received for ${count} times`)
                 createDisplay(stream)
                 count = 0
-            }
-            else {
-                console.log(`Stream received for ${count} times`)
             }
         })
 
@@ -73,31 +68,19 @@ const receiveShare = () => {
 
 /* Function to create display and sizing */
 const createDisplay = (stream) => {
+    source.width = window.innerWidth
+    source.height = window.innerHeight
     source.srcObject = stream
     source.style.visibility = 'visible'
-}
-
-source.addEventListener('loadedmetadata', () => {
-    display_width = source.videoWidth 
-    source.width = display_width
-    console.log(display_width);
-    /* --- */
-    display_height = source.videoHeight
-    source.height = display_height
-    console.log(display_height);
     source.play()
-    if(HD === false){
-        dc.send('hd')
-        HD = true
-    }
-});
+}
 
 /* Mouse onclick event function */
 const mouseClick = (e) => {
     let posX = source.offsetLeft
     let posY = source.offsetTop
-    let tempX = (e.pageX - posX) / display_width * 100 
-    let tempY = (e.pageY - posY) / display_height * 100
+    let tempX = (e.pageX - posX) / window.innerWidth * 100 
+    let tempY = (e.pageY - posY) / window.innerHeight * 100
     /*-----------------------------*/
     let X = tempX / 100 * ms_width
     let Y = tempY / 100 * ms_height
