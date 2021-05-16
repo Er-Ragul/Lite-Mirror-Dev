@@ -25,15 +25,15 @@ desktopCapturer.getSources({ types: ['window', 'screen'] })
 socket.on('YourId', (myId) => {
     console.log('Received ID from server')
     peer = new Peer('software', {
-        host: 'localhost',
+        host: 'lite-mirror-dev.herokuapp.com',
         port: 443,
-	    path: '/peerjs',
+	path: '/peerjs',
         secure: true,
         config: {
             'iceServers': [
                    { url: 'stun:stun1.l.google.com:19302' },
                    {
-                       url: 'turn:3.131.158.239:3478?transport=udp',
+                       url: 'turn:3.19.55.3:3478?transport=udp',
                        credential: 'ragul',
                        username: 'ragul'
                    }]
