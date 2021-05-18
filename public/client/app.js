@@ -128,9 +128,9 @@ source.addEventListener('touchstart', (e) => {
         dc.send(pointerClick)
         touchDoubleTab = 0
     }
-    else {
-        draggable = true
-    }
+    //else {
+    //    draggable = true
+    //}
     doubleTabTimer = setInterval(() => {
         touchDoubleTab = 0
         clearInterval(doubleTabTimer)
