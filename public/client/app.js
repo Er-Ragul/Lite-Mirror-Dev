@@ -84,26 +84,26 @@ const createDisplay = (stream) => {
                                 // Mouse Events //
 
 /* Mouse onclick event function */
-source.addEventListener('click', (e) => {
-    let posX = source.offsetLeft
-    let posY = source.offsetTop
-    let tempX = (e.pageX - posX) / window.innerWidth * 100 
-    let tempY = (e.pageY - posY) / window.innerHeight * 100
+//source.addEventListener('click', (e) => {
+    //let posX = source.offsetLeft
+    //let posY = source.offsetTop
+    //let tempX = (e.pageX - posX) / window.innerWidth * 100 
+    //let tempY = (e.pageY - posY) / window.innerHeight * 100
     /*-----------------------------*/
-    mouseX = tempX / 100 * ms_width
-    mouseY = tempY / 100 * ms_height
+    //mouseX = tempX / 100 * ms_width
+    //mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    let pointer = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    console.log(pointer)
-    dc.send(pointer)
-})
+    //let pointer = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    //console.log(pointer)
+    //dc.send(pointer)
+//})
 
 
 /* Mouse double click event function */
-source.addEventListener('dblclick', (e) => {
-    let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    dc.send(pointerClick)
-})
+//source.addEventListener('dblclick', (e) => {
+    //let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    //dc.send(pointerClick)
+//})
 
 /* --------------------------------------------------------------------------------------------- */
                                 // Touch Events //
