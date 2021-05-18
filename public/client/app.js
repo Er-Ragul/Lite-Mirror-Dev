@@ -197,9 +197,10 @@ source.addEventListener('touchmove', (e) => {
         dc.send(dragObject)
     }
     else {
+        status = false
+        clearInterval(clock)
         let moveCursor = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
         dc.send(moveCursor)
-        status = false
     }
 })
 
