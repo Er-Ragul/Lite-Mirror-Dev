@@ -111,19 +111,9 @@ const createDisplay = (stream) => {
 /* Touch double tab & draggable setter event function */
 let touchDoubleTab = 0
 let draggable = false
+let doubleTabTimer
 source.addEventListener('touchstart', (e) => {
     touchDoubleTab = touchDoubleTab + 1
-    if(touchDoubleTab === 2){
-        let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        dc.send(pointerClick)
-        touchDoubleTab = 0
-    }
-    draggable = true
-})
-
-
-/* Touch cursor move & drag event function */
-source.addEventListener('touchmove', (e) => {
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -132,6 +122,24 @@ source.addEventListener('touchmove', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
+    if(touchDoubleTab === 2){
+        clearInterval(doubleTabTimer)
+        let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        dc.send(pointerClick)
+        touchDoubleTab = 0
+    }
+    else {
+        draggable = true
+    }
+    doubleTabTimer = setInterval(() => {
+        touchDoubleTab = 0
+        clearInterval(doubleTabTimer)
+    }, 3000)
+})
+
+
+/* Touch cursor move & drag event function */
+source.addEventListener('touchmove', (e) => {
     if(draggable){
         let pointer = {status:'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
         console.log(pointer)
@@ -149,6 +157,7 @@ source.addEventListener('touchmove', (e) => {
 source.addEventListener('touchend', (e) => {
     draggable = false
 })
+
 
 /* Keyboard event function */
 const keyEvent = (e) => {
