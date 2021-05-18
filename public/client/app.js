@@ -81,10 +81,10 @@ const createDisplay = (stream) => {
 }
 
 /* --------------------------------------------------------------------------------------------- */
-                                // Mouse, Keyboard & Touch Events //
+                                // Mouse Events //
 
 /* Mouse onclick event function */
-const mouseClick = (e) => {
+source.addEventListener('click', (e) => {
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.pageX - posX) / window.innerWidth * 100 
@@ -96,16 +96,34 @@ const mouseClick = (e) => {
     let pointer = {status:'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     console.log(pointer)
     dc.send(pointer)
-}
+})
+
 
 /* Mouse double click event function */
-const mouseDoubleClick = () => {
+source.addEventListener('dblclick', (e) => {
     let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     dc.send(pointerClick)
-}
+})
 
-/* Touch move event function */
-const touchEvent = (e) => {
+/* --------------------------------------------------------------------------------------------- */
+                                // Touch Events //
+
+/* Touch double tab & draggable setter event function */
+let touchDoubleTab = 0
+let draggable = false
+source.addEventListener('touchstart', (e) => {
+    touchDoubleTab = touchDoubleTab + 1
+    if(touchDoubleTab === 2){
+        let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        dc.send(pointerClick)
+        touchDoubleTab = 0
+    }
+    draggable = true
+})
+
+
+/* Touch cursor move & drag event function */
+source.addEventListener('touchmove', (e) => {
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -114,21 +132,23 @@ const touchEvent = (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    let pointer = {status:'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    console.log(pointer)
-    dc.send(pointer)
-}
-
-/* Touch double tab event function */
-let touchDoubleTab = 0
-const touchTabEvent = () => {
-    touchDoubleTab = touchDoubleTab + 1
-    if(touchDoubleTab === 2){
-        let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        dc.send(pointerClick)
-        touchDoubleTab = 0
+    if(draggable){
+        let pointer = {status:'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        console.log(pointer)
+        dc.send(pointer)
     }
-}
+    else {
+        let pointer = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        console.log(pointer)
+        dc.send(pointer)
+    }
+})
+
+
+/* Touch drag event disabler function */
+source.addEventListener('touchend', (e) => {
+    draggable = false
+})
 
 /* Keyboard event function */
 const keyEvent = (e) => {
