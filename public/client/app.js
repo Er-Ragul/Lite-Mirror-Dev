@@ -93,7 +93,7 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    let pointer = {status:'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    let pointer = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     console.log(pointer)
     dc.send(pointer)
 })
