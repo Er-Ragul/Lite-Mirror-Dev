@@ -199,6 +199,7 @@ source.addEventListener('touchmove', (e) => {
     else {
         let moveCursor = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
         dc.send(moveCursor)
+        status = false
     }
 })
 
