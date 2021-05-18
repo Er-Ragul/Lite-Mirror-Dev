@@ -7,6 +7,10 @@ let ms_height = 1080
 let count = 0
 let mouseX
 let mouseY
+let status
+let timer = 0
+let clock
+let tabTime
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -84,36 +88,69 @@ const createDisplay = (stream) => {
                                 // Mouse Events //
 
 /* Mouse onclick event function */
-//source.addEventListener('click', (e) => {
-    //let posX = source.offsetLeft
-    //let posY = source.offsetTop
-    //let tempX = (e.pageX - posX) / window.innerWidth * 100 
-    //let tempY = (e.pageY - posY) / window.innerHeight * 100
+source.addEventListener('click', (e) => {
+    let posX = source.offsetLeft
+    let posY = source.offsetTop
+    let tempX = (e.pageX - posX) / window.innerWidth * 100 
+    let tempY = (e.pageY - posY) / window.innerHeight * 100
     /*-----------------------------*/
-    //mouseX = tempX / 100 * ms_width
-    //mouseY = tempY / 100 * ms_height
+    mouseX = tempX / 100 * ms_width
+    mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    //let pointer = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    //console.log(pointer)
-    //dc.send(pointer)
-//})
+    let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    console.log(moveTo)
+    dc.send(moveTo)
+})
 
 
 /* Mouse double click event function */
-//source.addEventListener('dblclick', (e) => {
-    //let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    //dc.send(pointerClick)
-//})
+source.addEventListener('dblclick', (e) => {
+    let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    dc.send(pointerClick)
+})
+
+/* Mouse down event function to initiate drag event */
+source.addEventListener('mousedown', (e) => {
+    clock = setInterval(() => {
+        timer++
+        box.innerHTML = timer
+        if(timer === 2){
+            clearInterval(clock)
+            timer = 0
+            status = true
+            console.log('Drag Activated')
+        }
+    }, 1000)
+})
+
+/* Mouse move event to drag object */
+source.addEventListener('mousemove', (e) => {
+    if(status){
+        let posX = source.offsetLeft
+        let posY = source.offsetTop
+        let tempX = (e.pageX - posX) / window.innerWidth * 100 
+        let tempY = (e.pageY - posY) / window.innerHeight * 100
+        /*-----------------------------*/
+        mouseX = tempX / 100 * ms_width
+        mouseY = tempY / 100 * ms_height
+        /*-----------------------------*/
+        let dragObject = {status:'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        console.log(dragObject)
+        dc.send(dragObject)
+    }
+})
+
+/* Mouse up event to release drag */
+source.addEventListener('mouseup', (e) => {
+    clearInterval(clock)
+    status = false
+})
 
 /* --------------------------------------------------------------------------------------------- */
                                 // Touch Events //
 
 /* Touch double tab & draggable setter event function */
-let touchDoubleTab = 0
-let draggable = false
-let doubleTabTimer
 source.addEventListener('touchstart', (e) => {
-    touchDoubleTab = touchDoubleTab + 1
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -122,42 +159,55 @@ source.addEventListener('touchstart', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    if(touchDoubleTab === 2){
-        clearInterval(doubleTabTimer)
-        let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        dc.send(pointerClick)
-        touchDoubleTab = 0
+    let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    console.log(moveTo)
+    dc.send(moveTo)
+    
+    clock = setInterval(() => {
+        timer++
+        if(timer === 2){
+            clearInterval(clock)
+            timer = 0
+            status = true
+        }
+    }, 1000)
+
+    var now = new Date().getTime()
+    var since = now - tabTime
+    if((since < 600) && (since > 0)){
+        let dbClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        dc.send(dbClick)
     }
-    //else {
-    //    draggable = true
-    //}
-    doubleTabTimer = setInterval(() => {
-        touchDoubleTab = 0
-        clearInterval(doubleTabTimer)
-    }, 3000)
+    tabTime = new Date().getTime()
 })
 
 
 /* Touch cursor move & drag event function */
 source.addEventListener('touchmove', (e) => {
-    if(draggable){
-        let pointer = {status:'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        console.log(pointer)
-        dc.send(pointer)
+    let posX = source.offsetLeft
+    let posY = source.offsetTop
+    let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
+    let tempY = (e.touches[0].pageY - posY) / window.innerHeight * 100
+    /*-----------------------------*/
+    mouseX = tempX / 100 * ms_width
+    mouseY = tempY / 100 * ms_height
+    /*-----------------------------*/
+    if(status){
+        let dragObject = {status: 'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        dc.send(dragObject)
     }
     else {
-        let pointer = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        console.log(pointer)
-        dc.send(pointer)
+        let moveCursor = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+        dc.send(moveCursor)
     }
 })
 
 
 /* Touch drag event disabler function */
 source.addEventListener('touchend', (e) => {
-    draggable = false
+    clearInterval(clock)
+    status = false
 })
-
 
 /* Keyboard event function */
 const keyEvent = (e) => {
