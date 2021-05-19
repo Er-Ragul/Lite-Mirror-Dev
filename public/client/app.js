@@ -151,6 +151,8 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch double tab & draggable setter event function */
 source.addEventListener('touchstart', (e) => {
+    clearInterval(clock)
+    status = false
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -159,7 +161,6 @@ source.addEventListener('touchstart', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    status = false
     
     clock = setInterval(() => {
         timer++
