@@ -159,9 +159,9 @@ source.addEventListener('touchstart', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    console.log(moveTo)
-    dc.send(moveTo)
+    //let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    //console.log(moveTo)
+    //dc.send(moveTo)
     
     clock = setInterval(() => {
         timer++
