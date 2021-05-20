@@ -104,6 +104,8 @@ source.addEventListener('click', (e) => {
 
 /* Mouse double click event function */
 source.addEventListener('dblclick', (e) => {
+    clearInterval(clock)
+    timer = 0
     let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     dc.send(pointerClick)
 })
@@ -154,6 +156,8 @@ source.addEventListener('touchstart', (e) => {
     var now = new Date().getTime()
     var since = now - tabTime
     if((since < 600) && (since > 0)){
+        clearInterval(clock)
+        timer = 0
         let dbClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
         dc.send(dbClick)
     }
