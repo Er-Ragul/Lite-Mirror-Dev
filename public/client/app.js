@@ -102,7 +102,6 @@ source.addEventListener('click', (e) => {
     dc.send(moveTo)
 })
 
-
 /* Mouse double click event function */
 source.addEventListener('dblclick', (e) => {
     let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
@@ -113,37 +112,19 @@ source.addEventListener('dblclick', (e) => {
 source.addEventListener('mousedown', (e) => {
     clock = setInterval(() => {
         timer++
-        box.innerHTML = timer
         if(timer === 2){
             clearInterval(clock)
             timer = 0
-            status = true
-            console.log('Drag Activated')
+            let dragTo = {status: 'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+            dc.send(dragTo)
         }
     }, 1000)
-})
-
-/* Mouse move event to drag object */
-source.addEventListener('mousemove', (e) => {
-    if(status){
-        let posX = source.offsetLeft
-        let posY = source.offsetTop
-        let tempX = (e.pageX - posX) / window.innerWidth * 100 
-        let tempY = (e.pageY - posY) / window.innerHeight * 100
-        /*-----------------------------*/
-        mouseX = tempX / 100 * ms_width
-        mouseY = tempY / 100 * ms_height
-        /*-----------------------------*/
-        let dragObject = {status:'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        console.log(dragObject)
-        dc.send(dragObject)
-    }
 })
 
 /* Mouse up event to release drag */
 source.addEventListener('mouseup', (e) => {
     clearInterval(clock)
-    status = false
+    timer = 0
 })
 
 /* --------------------------------------------------------------------------------------------- */
@@ -151,8 +132,6 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch double tab & draggable setter event function */
 source.addEventListener('touchstart', (e) => {
-    clearInterval(clock)
-    status = false
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -167,7 +146,8 @@ source.addEventListener('touchstart', (e) => {
         if(timer === 2){
             clearInterval(clock)
             timer = 0
-            status = true
+            let dragTo = {status: 'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+            dc.send(dragTo)
         }
     }, 1000)
 
@@ -183,6 +163,9 @@ source.addEventListener('touchstart', (e) => {
 
 /* Touch cursor move & drag event function */
 source.addEventListener('touchmove', (e) => {
+    clearInterval(clock)
+    timer = 0
+
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -191,23 +174,15 @@ source.addEventListener('touchmove', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    if(status){
-        let dragObject = {status: 'dragTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        dc.send(dragObject)
-    }
-    else {
-        status = false
-        clearInterval(clock)
-        let moveCursor = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        dc.send(moveCursor)
-    }
+    let moveCursor = {status: 'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    dc.send(moveCursor)
 })
 
 
 /* Touch drag event disabler function */
 source.addEventListener('touchend', (e) => {
     clearInterval(clock)
-    status = false
+    timer = 0
 })
 
 /* Keyboard event function */
