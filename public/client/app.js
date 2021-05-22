@@ -190,11 +190,11 @@ source.addEventListener('touchend', (e) => {
 })
 
 /* Keyboard event function */
-const keyEvent = (e) => {
-    var keys = e.which || e.keyCode;
+document.addEventListener('keypress', (e) => {
+    console.log(e.key)
     try {
-        dc.send({status: 'write', nmChar: String.fromCharCode(keys)})
+        dc.send({status: 'write', nmChar: e.key})
     } catch (error) {
         console.log('Peer not initiated')
     }
-}
+})
