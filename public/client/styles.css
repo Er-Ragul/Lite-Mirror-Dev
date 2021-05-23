@@ -3,13 +3,6 @@ body {
     padding: 0;
 }
 
-/* Wrapper design */
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 /* Token box design */
 .tokenBox {
     position: absolute;
@@ -25,4 +18,22 @@ body {
 
 video {
     object-fit: fill;
+}
+
+/* Keyboard toggle button */
+#toggleKeyboard {
+    position: absolute;
+    visibility: hidden;
+    z-index: 1;
+    right: 3%;
+    top: 3%;
+}
+
+/* Virtual keyboard */
+#virtualKeyboard {
+    position: absolute;
+    visibility: hidden;
+    z-index: 1;
+    bottom: 0;
+    width: 100%;
 }
