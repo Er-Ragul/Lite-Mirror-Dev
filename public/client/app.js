@@ -11,11 +11,15 @@ let status
 let timer = 0
 let clock
 let tabTime
+let keyboardStatus = false
 
 /* Import or Initilization */
 const socket = io.connect('/')
 const source = document.getElementById('display')
 const tokenBox = document.getElementById('tokenBox') 
+const toggle = document.getElementById('toggleKeyboard')
+const virtualKeys = document.getElementById('virtualKeyboard')
+const Keyboard = window.SimpleKeyboard.default;
 
 /* --------------------------------------------------------------------------------------------- */
                                 // Signaling & Stream setup //
@@ -41,7 +45,7 @@ const startConnection = () => {
                 'iceServers': [
                        { url: 'stun:stun1.l.google.com:19302' },
                        {
-                           url: 'turn:3.138.190.183:3478?transport=udp',
+                           url: 'turn:3.131.158.239:3478?transport=udp',
                            credential: 'ragul',
                            username: 'ragul'
                        }]
@@ -81,6 +85,7 @@ const createDisplay = (stream) => {
     source.height = window.innerHeight
     source.srcObject = stream
     source.style.visibility = 'visible'
+    toggle.style.visibility = 'visible'
     source.play()
 }
 
@@ -104,8 +109,6 @@ source.addEventListener('click', (e) => {
 
 /* Mouse double click event function */
 source.addEventListener('dblclick', (e) => {
-    clearInterval(clock)
-    timer = 0
     let pointerClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     dc.send(pointerClick)
 })
@@ -198,3 +201,39 @@ document.addEventListener('keypress', (e) => {
         console.log('Peer not initiated')
     }
 })
+
+
+/* Virtual keyboard for Touch Devices */
+const getKeyboard = () => {
+    if(keyboardStatus === false){
+        virtualKeys.style.visibility = 'visible'
+        keyboardStatus = true
+    }
+    else{
+        virtualKeys.style.visibility = 'hidden'
+        keyboardStatus = false
+    }
+}
+
+const keyboard = new Keyboard({
+    onKeyPress: button => onKeyPress(button)
+  });
+  
+ function onKeyPress(button) {
+  if (button === "{shift}" || button === "{lock}"){
+    handleShift();
+  }
+  else {
+    dc.send({status: 'write', nmChar: button})
+    console.log("Button pressed", button);
+  }
+}
+
+function handleShift() {
+  let currentLayout = keyboard.options.layoutName;
+  let shiftToggle = currentLayout === "default" ? "shift" : "default";
+
+  keyboard.setOptions({
+    layoutName: shiftToggle
+  });
+}
