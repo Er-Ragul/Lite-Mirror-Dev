@@ -6,17 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lite-Mirror-Client</title>
     <link href="/client/styles.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css" rel="stylesheet" />
     <script src="/client/peerjs.min.js"></script>
     <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="/client/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"></script>
 </head>
 <body>
     <div class="container" id="box">
+        <button onclick="getKeyboard()" id="toggleKeyboard">KEYBOARD</button>
         <div id="tokenBox" class="tokenBox">
             <input type="text" id="token" placeholder="Enter Token Number">
             <button onclick="startConnection()" id="btn" disabled>Connect</button>
         </div>
         <video autoplay id="display"></video>
+        <div class="simple-keyboard" id="virtualKeyboard"></div>
     </div>
 </body>
 </html>
