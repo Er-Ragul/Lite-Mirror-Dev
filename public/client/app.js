@@ -145,6 +145,8 @@ source.addEventListener('touchstart', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
+    let click = {status: 'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    dc.send(click)
     
     clock = setInterval(() => {
         timer++
