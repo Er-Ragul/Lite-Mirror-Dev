@@ -105,8 +105,8 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    guester.style.left = e.clientX + 'px'
-    guester.style.top = e.clientY + 'px'
+    guester.style.left = e.pageX - 50 + 'px'
+    guester.style.top = e.pageY + 20 + 'px'
     guester.style.visibility = 'visible'
     /* --------------------------- */
     let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
