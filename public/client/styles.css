@@ -20,14 +20,6 @@ video {
     object-fit: fill;
 }
 
-/* Keyboard toggle button */
-#toggleKeyboard {
-    position: absolute;
-    visibility: hidden;
-    z-index: 1;
-    right: 3%;
-    top: 3%;
-}
 
 /* Virtual keyboard */
 #virtualKeyboard {
@@ -50,13 +42,23 @@ video {
 #oneClick {
     padding: 5px;
     border: 1px solid black;
-    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    overflow: hidden;
     color: black;
 }
 
 #twoClick {
     padding: 5px;
     border: 1px solid black;
-    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    overflow: hidden;
+    color: black;
+}
+
+#toggleKeyboard {
+    padding: 5px;
+    border: 1px solid black;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    overflow: hidden;
     color: black;
 }
