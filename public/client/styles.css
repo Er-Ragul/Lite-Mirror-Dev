@@ -37,3 +37,28 @@ video {
     bottom: 0;
     width: 100%;
 }
+
+/* Mouse Guestures */
+#guester{
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+}
+
+#oneClick {
+    padding: 5px;
+    border: 1px solid black;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    overflow: hidden;
+    color: black;
+}
+
+#twoClick {
+    padding: 5px;
+    border: 1px solid black;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    overflow: hidden;
+    color: black;
+}
