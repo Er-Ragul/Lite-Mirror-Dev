@@ -105,10 +105,17 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    guester.style.left = e.pageX - 50 + 'px'
-    guester.style.top = e.pageY + 20 + 'px'
+    guester.style.left = e.clientX + 'px'
+    guester.style.top = e.clientY + 'px'
     guester.style.visibility = 'visible'
     /* --------------------------- */
+
+    var gtimer = setInterval(() => {
+        clearInterval(gtimer)
+        guester.style.visibility = 'hidden'
+        console.log('Interval closed')
+    }, 3000)
+    
     let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     console.log(moveTo)
     dc.send(moveTo)
@@ -208,7 +215,7 @@ document.addEventListener('keypress', (e) => {
 
 
 /* Virtual keyboard for Touch Devices */
-const getKeyboard = () => {
+toggle.addEventListener('click', () => {
     if(keyboardStatus === false){
         virtualKeys.style.visibility = 'visible'
         keyboardStatus = true
@@ -217,7 +224,7 @@ const getKeyboard = () => {
         virtualKeys.style.visibility = 'hidden'
         keyboardStatus = false
     }
-}
+})
 
 const keyboard = new Keyboard({
     onKeyPress: button => onKeyPress(button)
@@ -226,6 +233,12 @@ const keyboard = new Keyboard({
  function onKeyPress(button) {
   if (button === "{shift}" || button === "{lock}"){
     handleShift();
+  }
+  else if (button === "{bksp}"){
+    dc.send({status: 'backspace', nmChar: button})
+  }
+  else if (button === "{enter}"){
+    dc.send({status: 'enter', nmChar: button})
   }
   else {
     dc.send({status: 'write', nmChar: button})
