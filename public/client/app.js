@@ -19,6 +19,9 @@ const source = document.getElementById('display')
 const tokenBox = document.getElementById('tokenBox') 
 const toggle = document.getElementById('toggleKeyboard')
 const virtualKeys = document.getElementById('virtualKeyboard')
+const guester = document.getElementById('guester')
+const oneClick = document.getElementById('oneClick')
+const twoClick = document.getElementById('twoClick')
 const Keyboard = window.SimpleKeyboard.default;
 
 /* --------------------------------------------------------------------------------------------- */
@@ -102,6 +105,10 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
+    guester.style.left = e.clientX + 'px'
+    guester.style.top = e.clientY + 'px'
+    guester.style.visibility = 'visible'
+    /* --------------------------- */
     let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     console.log(moveTo)
     dc.send(moveTo)
@@ -137,16 +144,11 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch double tab & draggable setter event function */
 source.addEventListener('touchstart', (e) => {
-    let posX = source.offsetLeft
-    let posY = source.offsetTop
-    let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
-    let tempY = (e.touches[0].pageY - posY) / window.innerHeight * 100
-    /*-----------------------------*/
-    mouseX = tempX / 100 * ms_width
-    mouseY = tempY / 100 * ms_height
-    /*-----------------------------*/
-    //let click = {status: 'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-    //dc.send(click)
+    var gtimer = setInterval(() => {
+        clearInterval(gtimer)
+        guester.style.visibility = 'hidden'
+        console.log('Interval closed')
+    }, 3000)
     
     clock = setInterval(() => {
         timer++
@@ -157,16 +159,16 @@ source.addEventListener('touchstart', (e) => {
             dc.send(dragTo)
         }
     }, 1000)
+})
 
-    var now = new Date().getTime()
-    var since = now - tabTime
-    if((since < 600) && (since > 0)){
-        clearInterval(clock)
-        timer = 0
-        let dbClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
-        dc.send(dbClick)
-    }
-    tabTime = new Date().getTime()
+oneClick.addEventListener('click', () => {
+    let click = {status: 'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    dc.send(click)
+})
+
+twoClick.addEventListener('click', () => {
+    let dbClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    dc.send(dbClick)
 })
 
 
