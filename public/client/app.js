@@ -105,7 +105,6 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    
     let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     console.log(moveTo)
     dc.send(moveTo)
@@ -136,8 +135,6 @@ source.addEventListener('mouseup', (e) => {
     timer = 0
 
     if(touchTracker){
-        guester.style.left = e.clientX + 'px'
-        guester.style.top = e.clientY + 'px'
         guester.style.visibility = 'visible'
     
         var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
@@ -164,6 +161,18 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch double tab & draggable setter event function */
 source.addEventListener('touchstart', (e) => {
+    let posX = source.offsetLeft
+    let posY = source.offsetTop
+    let tempX = (e.pageX - posX) / window.innerWidth * 100 
+    let tempY = (e.pageY - posY) / window.innerHeight * 100
+    /*-----------------------------*/
+    mouseX = tempX / 100 * ms_width
+    mouseY = tempY / 100 * ms_height
+    /*-----------------------------*/
+    let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
+    console.log(moveTo)
+    dc.send(moveTo)
+
     touchTracker = true
     clock = setInterval(() => {
         timer++
