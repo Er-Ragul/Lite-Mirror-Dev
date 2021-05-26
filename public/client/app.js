@@ -97,7 +97,6 @@ const createDisplay = (stream) => {
 
 /* Mouse onclick event function */
 source.addEventListener('click', (e) => {
-    if(!touchTracker){
         let posX = source.offsetLeft
         let posY = source.offsetTop
         let tempX = (e.pageX - posX) / window.innerWidth * 100 
@@ -110,7 +109,6 @@ source.addEventListener('click', (e) => {
         let moveTo = {status:'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
         console.log(moveTo)
         dc.send(moveTo)
-    }
 })
 
 /* Mouse double click event function */
