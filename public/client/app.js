@@ -108,11 +108,20 @@ source.addEventListener('click', (e) => {
     guester.style.left = e.clientX + 'px'
     guester.style.top = e.clientY + 'px'
     guester.style.visibility = 'visible'
+
+    var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
+    for(i=0; i<splKeys.length; i++){
+        document.getElementById(splKeys[i]).style.visibility = 'visible'
+    }
     /* --------------------------- */
 
     var gtimer = setInterval(() => {
         clearInterval(gtimer)
         guester.style.visibility = 'hidden'
+        var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
+        for(i=0; i<splKeys.length; i++){
+            document.getElementById(splKeys[i]).style.visibility = 'hidden'
+        }
         console.log('Interval closed')
     }, 3000)
     
@@ -151,11 +160,6 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch double tab & draggable setter event function */
 source.addEventListener('touchstart', (e) => {
-    var gtimer = setInterval(() => {
-        clearInterval(gtimer)
-        guester.style.visibility = 'hidden'
-        console.log('Interval closed')
-    }, 3000)
     
     clock = setInterval(() => {
         timer++
