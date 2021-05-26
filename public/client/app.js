@@ -7,11 +7,11 @@ let ms_height = 1080
 let count = 0
 let mouseX
 let mouseY
-let status
 let timer = 0
 let clock
 let tabTime
 let keyboardStatus = false
+let touchTracker = false
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -105,25 +105,6 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    guester.style.left = e.clientX + 'px'
-    guester.style.top = e.clientY + 'px'
-    guester.style.visibility = 'visible'
-
-    var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
-    for(i=0; i<splKeys.length; i++){
-        document.getElementById(splKeys[i]).style.visibility = 'visible'
-    }
-    /* --------------------------- */
-
-    var gtimer = setInterval(() => {
-        clearInterval(gtimer)
-        guester.style.visibility = 'hidden'
-        var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
-        for(i=0; i<splKeys.length; i++){
-            document.getElementById(splKeys[i]).style.visibility = 'hidden'
-        }
-        console.log('Interval closed')
-    }, 3000)
     
     let moveTo = {status:'moveTo', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     console.log(moveTo)
@@ -153,6 +134,29 @@ source.addEventListener('mousedown', (e) => {
 source.addEventListener('mouseup', (e) => {
     clearInterval(clock)
     timer = 0
+
+    if(touchTracker){
+        guester.style.left = e.clientX + 'px'
+        guester.style.top = e.clientY + 'px'
+        guester.style.visibility = 'visible'
+    
+        var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
+        for(i=0; i<splKeys.length; i++){
+            document.getElementById(splKeys[i]).style.visibility = 'visible'
+        }
+        /* --------------------------- */
+    
+        var gtimer = setInterval(() => {
+            touchTracker = false
+            clearInterval(gtimer)
+            guester.style.visibility = 'hidden'
+            var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
+            for(i=0; i<splKeys.length; i++){
+                document.getElementById(splKeys[i]).style.visibility = 'hidden'
+            }
+            console.log('Interval closed')
+        }, 3000)
+    }
 })
 
 /* --------------------------------------------------------------------------------------------- */
@@ -160,7 +164,7 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch double tab & draggable setter event function */
 source.addEventListener('touchstart', (e) => {
-    
+    touchTracker = true
     clock = setInterval(() => {
         timer++
         if(timer === 2){
@@ -173,11 +177,13 @@ source.addEventListener('touchstart', (e) => {
 })
 
 oneClick.addEventListener('click', () => {
+    touchTracker = false
     let click = {status: 'click', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     dc.send(click)
 })
 
 twoClick.addEventListener('click', () => {
+    touchTracker = false
     let dbClick = {status: 'doubleClick', x: Math.floor(mouseX), y: Math.floor(mouseY)}
     dc.send(dbClick)
 })
@@ -243,6 +249,9 @@ const keyboard = new Keyboard({
   }
   else if (button === "{enter}"){
     dc.send({status: 'enter', nmChar: button})
+  }
+  else if (button === "{space}"){
+    dc.send({status: 'space', nmChar: button})
   }
   else {
     dc.send({status: 'write', nmChar: button})
