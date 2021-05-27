@@ -34,33 +34,17 @@ video {
 #guester{
     visibility: hidden;
     position: absolute;
+    background-color: white;
     top: 0;
     left: 50%;
+    transform: translate(-50%);
     display: flex;
     flex-direction: row;
     z-index: 1;
 }
 
-#oneClick {
-    visibility: hidden;
-    padding: 5px;
+#dragger, #toggleKeyboard {
+    padding: 8px;
+    font-size: 20px;
     border: 1px solid black;
-    background-color: white;
-    color: black;
-}
-
-#twoClick {
-    visibility: hidden;
-    padding: 5px;
-    border: 1px solid black;
-    background-color: white;
-    color: black;
-}
-
-#toggleKeyboard {
-    visibility: hidden;
-    padding: 5px;
-    border: 1px solid black;
-    background-color: white;
-    color: black;
 }
