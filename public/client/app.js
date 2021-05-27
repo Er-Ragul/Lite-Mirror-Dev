@@ -108,13 +108,13 @@ source.addEventListener('click', (e) => {
 
 dragger.addEventListener('click', () => {
     if(!dragPos){
-        drag.style.backgroundColor = 'lightgray'
+        dragger.style.backgroundColor = 'lightgray'
         let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
         dc.send(dragSet)
         dragPos = true
     }
     else if(dragPos){
-        drag.style.backgroundColor = 'white'
+        dragger.style.backgroundColor = 'white'
         let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
         dc.send(dragTo)
         dragPos = false
@@ -160,10 +160,12 @@ document.addEventListener('keypress', (e) => {
 toggle.addEventListener('click', () => {
     if(keyboardStatus === false){
         virtualKeys.style.visibility = 'visible'
+        toggle.style.backgroundColor = 'lightgray'
         keyboardStatus = true
     }
     else{
         virtualKeys.style.visibility = 'hidden'
+        toggle.style.backgroundColor = 'white'
         keyboardStatus = false
     }
 })
@@ -199,3 +201,33 @@ function handleShift() {
     layoutName: shiftToggle
   });
 }
+
+/* Smart Menu events */
+let guestFocus = false
+guester.addEventListener('mousedown', (e) => {
+    guestFocus = true
+})
+
+guester.addEventListener('mouseup', (e) => {
+    guestFocus = false
+})
+
+guester.addEventListener('mousemove', (e) => {
+    if(guestFocus){
+        guester.style.left = e.pageX + 'px'
+    }
+})
+
+guester.addEventListener('touchstart', (e) => {
+    guestFocus = true
+})
+
+guester.addEventListener('touchmove', (e) => {
+    if(guestFocus){
+        guester.style.left = e.touches[0].pageX + 'px'
+    }
+})
+
+guester.addEventListener('touchend', (e) => {
+    guestFocus = false
+})
