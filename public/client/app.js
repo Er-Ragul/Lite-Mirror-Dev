@@ -7,11 +7,8 @@ let ms_height = 1080
 let count = 0
 let mouseX
 let mouseY
-let timer = 0
-let clock
-let tabTime
+let dragPos = false
 let keyboardStatus = false
-let touchTracker = false
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -20,10 +17,8 @@ const tokenBox = document.getElementById('tokenBox')
 const toggle = document.getElementById('toggleKeyboard')
 const virtualKeys = document.getElementById('virtualKeyboard')
 const guester = document.getElementById('guester')
-const oneClick = document.getElementById('oneClick')
-const twoClick = document.getElementById('twoClick')
+const dragger = document.getElementById('dragger')
 const Keyboard = window.SimpleKeyboard.default;
-
 /* --------------------------------------------------------------------------------------------- */
                                 // Signaling & Stream setup //
 
@@ -88,7 +83,7 @@ const createDisplay = (stream) => {
     source.height = window.innerHeight
     source.srcObject = stream
     source.style.visibility = 'visible'
-    toggle.style.visibility = 'visible'
+    guester.style.visibility = 'visible'
     source.play()
 }
 
@@ -97,75 +92,6 @@ const createDisplay = (stream) => {
 
 /* Mouse onclick event function */
 source.addEventListener('click', (e) => {
-        let posX = source.offsetLeft
-        let posY = source.offsetTop
-        let tempX = (e.pageX - posX) / window.innerWidth * 100 
-        let tempY = (e.pageY - posY) / window.innerHeight * 100
-        /*-----------------------------*/
-        mouseX = tempX / 100 * ms_width
-        mouseY = tempY / 100 * ms_height
-        /*-----------------------------*/
-        
-        let moveTo = {status:'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-        console.log(moveTo)
-        dc.send(moveTo)
-})
-
-/* Mouse double click event function */
-source.addEventListener('dblclick', (e) => {
-    if(!touchTracker){
-        let pointerClick = {status: 'doubleClick', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(pointerClick)
-    }
-})
-
-/* Mouse down event function to initiate drag event */
-source.addEventListener('mousedown', (e) => {
-    if(!touchTracker){
-        clock = setInterval(() => {
-            timer++
-            if(timer === 2){
-                clearInterval(clock)
-                timer = 0
-                let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-                dc.send(dragTo)
-            }
-        }, 1000)
-    }
-})
-
-/* Mouse up event to release drag */
-source.addEventListener('mouseup', (e) => {
-    clearInterval(clock)
-    timer = 0
-
-    if(touchTracker){
-        guester.style.visibility = 'visible'
-    
-        var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
-        for(i=0; i<splKeys.length; i++){
-            document.getElementById(splKeys[i]).style.visibility = 'visible'
-        }
-        /* --------------------------- */
-    
-        var gtimer = setInterval(() => {
-            touchTracker = false
-            clearInterval(gtimer)
-            guester.style.visibility = 'hidden'
-            var splKeys = ["oneClick", "twoClick", "toggleKeyboard"]
-            for(i=0; i<splKeys.length; i++){
-                document.getElementById(splKeys[i]).style.visibility = 'hidden'
-            }
-            console.log('Interval closed')
-        }, 3000)
-    }
-})
-
-/* --------------------------------------------------------------------------------------------- */
-                                // Touch Events //
-
-/* Touch double tab & draggable setter event function */
-source.addEventListener('touchstart', (e) => {
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.pageX - posX) / window.innerWidth * 100 
@@ -174,40 +100,39 @@ source.addEventListener('touchstart', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    let moveTo = {status:'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-    console.log(moveTo)
-    dc.send(moveTo)
-
-    touchTracker = true
-    clock = setInterval(() => {
-        timer++
-        if(timer === 2){
-            clearInterval(clock)
-            timer = 0
-            let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-            dc.send(dragTo)
-        }
-    }, 1000)
-})
-
-oneClick.addEventListener('click', () => {
-    touchTracker = false
-    let click = {status: 'click', x: Math.round(mouseX), y: Math.round(mouseY)}
+    
+    let click = {status:'click', x: Math.round(mouseX), y: Math.round(mouseY)}
+    console.log(click)
     dc.send(click)
 })
 
-twoClick.addEventListener('click', () => {
-    touchTracker = false
-    let dbClick = {status: 'doubleClick', x: Math.round(mouseX), y: Math.round(mouseY)}
-    dc.send(dbClick)
+dragger.addEventListener('click', () => {
+    if(!dragPos){
+        drag.style.backgroundColor = 'lightgray'
+        let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(dragSet)
+        dragPos = true
+    }
+    else if(dragPos){
+        drag.style.backgroundColor = 'white'
+        let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(dragTo)
+        dragPos = false
+    }
 })
+
+/* Mouse double click event function */
+source.addEventListener('dblclick', (e) => {
+    let pointerClick = {status: 'doubleClick', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(pointerClick)
+})
+
+/* --------------------------------------------------------------------------------------------- */
+                                // Touch Events //
 
 
 /* Touch cursor move & drag event function */
 source.addEventListener('touchmove', (e) => {
-    clearInterval(clock)
-    timer = 0
-
     let posX = source.offsetLeft
     let posY = source.offsetTop
     let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
@@ -218,13 +143,6 @@ source.addEventListener('touchmove', (e) => {
     /*-----------------------------*/
     let moveCursor = {status: 'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
     dc.send(moveCursor)
-})
-
-
-/* Touch drag event disabler function */
-source.addEventListener('touchend', (e) => {
-    clearInterval(clock)
-    timer = 0
 })
 
 /* Keyboard event function */
