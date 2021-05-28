@@ -2,8 +2,8 @@
 let token
 let peer
 let dc
-let ms_width = 1920
-let ms_height = 1080
+let ms_width = 0
+let ms_height = 0
 let count = 0
 let mouseX
 let mouseY
@@ -18,6 +18,10 @@ const toggle = document.getElementById('toggleKeyboard')
 const virtualKeys = document.getElementById('virtualKeyboard')
 const guester = document.getElementById('guester')
 const dragger = document.getElementById('dragger')
+const copy = document.getElementById('copy')
+const cut = document.getElementById('cut')
+const paste = document.getElementById('paste')
+const selectAll = document.getElementById('select-all')
 const Keyboard = window.SimpleKeyboard.default;
 /* --------------------------------------------------------------------------------------------- */
                                 // Signaling & Stream setup //
@@ -31,6 +35,7 @@ socket.on('YourId', (myId) => {
 const startConnection = () => {
     token = document.getElementById('token').value
     if(token) { 
+        console.log('You entered : ' + token)
         tokenBox.remove()
         // Working here -------------------------------------------------------------------> //
         socket.emit('makeCall', token.toString(), window.innerWidth, window.innerHeight) 
@@ -57,7 +62,9 @@ const startConnection = () => {
 /* Initializing display function */
 const receiveShare = () => {
     peer.on('call', (call) => {
-        dc = peer.connect('software')
+        var peerid = 'lite'+token.toString()
+        console.log(peerid)
+        dc = peer.connect(peerid)
         console.log('Incoming Call')
         call.answer(null)
         call.on('stream', (stream) => {
@@ -70,8 +77,11 @@ const receiveShare = () => {
         })
 
         dc.on('open', () => {
-            dc.on('data', (msg) => {
-                console.log(msg)
+            dc.on('data', (size) => {
+                ms_width = size.pcWidth
+                ms_height = size.pcHeight
+                console.log('Main Screen Width : ' + ms_width)
+                console.log('Main Screen Height : ' + ms_height)
             })
         })
     })
@@ -104,21 +114,6 @@ source.addEventListener('click', (e) => {
     let click = {status:'click', x: Math.round(mouseX), y: Math.round(mouseY)}
     console.log(click)
     dc.send(click)
-})
-
-dragger.addEventListener('click', () => {
-    if(!dragPos){
-        dragger.style.backgroundColor = 'lightgray'
-        let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(dragSet)
-        dragPos = true
-    }
-    else if(dragPos){
-        dragger.style.backgroundColor = 'white'
-        let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(dragTo)
-        dragPos = false
-    }
 })
 
 /* Mouse double click event function */
@@ -230,4 +225,46 @@ guester.addEventListener('touchmove', (e) => {
 
 guester.addEventListener('touchend', (e) => {
     guestFocus = false
+})
+
+
+/* Drag icon event */
+dragger.addEventListener('click', () => {
+    if(!dragPos){
+        dragger.style.backgroundColor = 'lightgray'
+        let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(dragSet)
+        dragPos = true
+    }
+    else if(dragPos){
+        dragger.style.backgroundColor = 'white'
+        let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(dragTo)
+        dragPos = false
+    }
+})
+
+copy.addEventListener('click', () => {
+    copy.style.backgroundColor = 'lightgray'
+    let copyThat = {status: 'copyThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(copyThat)
+})
+
+cut.addEventListener('click', () => {
+    cut.style.backgroundColor = 'lightgray'
+    let cutThat = {status: 'cutThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(cutThat)
+})
+
+paste.addEventListener('click', () => {
+    copy.style.backgroundColor = 'white'
+    cut.style.backgroundColor = 'white'
+    let pasteThat = {status: 'pasteThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(pasteThat)
+})
+
+selectAll.addEventListener('click', () => {
+    selectAll.style.backgroundColor = 'lightgray'
+    let selectThose = {status: 'selectThose', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(selectThose)
 })
