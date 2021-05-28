@@ -14,8 +14,6 @@ const io = require('socket.io')(server, {
       }
 })
 
-let softid
-
 app.use('/peerjs', peerServer)
 app.set('view-engine', 'ejs')
 app.use(express.static('public'))
@@ -32,14 +30,15 @@ io.on('connection', socket => {
     io.to(socket.id).emit('YourId', socket.id);
     console.log('Client Connected id : ' + socket.id)
 
-    socket.on('reserve_id', (data) => {
-        softid = data.id
-        console.log('Software ID : ' + softid)
+    socket.on('create-room', roomid => {
+        socket.join(roomid)
+        console.log('Create Room : ' + roomid)
     })
-
-    // Working here -------------------------- //
+    
     socket.on('makeCall', (token, cliWidth, cliHeight) => {
-        io.to(softid).emit('makeClientCall', token, cliWidth, cliHeight);
+        socket.join(token)
+        io.to(token).emit('makeClientCall', token, cliWidth, cliHeight)
+        console.log('Token of client is : ' + token)
     })
 
 })
