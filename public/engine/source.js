@@ -2,8 +2,8 @@
 let displaySource
 let peer
 let dc
-let widthSetter = 0
-let hightSetter = 0
+let softwareId
+let peerid
 
 /* Import or Initialization */
 let socket = io.connect('/')
@@ -23,24 +23,27 @@ desktopCapturer.getSources({ types: ['window', 'screen'] })
 
 /* Socket callback events for peer to peer connectivity */
 socket.on('YourId', (myId) => {
-    console.log('Received ID from server')
-    peer = new Peer('software', {
+    softwareId = Math.floor(1000 + Math.random() * 9000)
+    peerid = 'lite'+softwareId.toString()
+    document.getElementById('yourToken').innerHTML = softwareId
+    console.log('Software ID : ' + peerid)
+    peer = new Peer(peerid, {
         host: 'lite-mirror-dev.herokuapp.com',
         port: 443,
-	path: '/peerjs',
+	    path: '/peerjs',
         secure: true,
         config: {
             'iceServers': [
                    { url: 'stun:stun1.l.google.com:19302' },
                    {
-                       url: 'turn:3.138.190.183:3478?transport=udp',
+                       url: 'turn:3.131.158.239:3478?transport=udp',
                        credential: 'ragul',
                        username: 'ragul'
                    }]
         }
     })
     dataConnection()
-    socket.emit('reserve_id', {name: 'software', id: myId})
+    socket.emit('create-room', softwareId.toString())
 })
 
 /* Make call to client  ---> step : 1 */
@@ -83,11 +86,14 @@ const dataConnection = () => {
             dc.on('data', (pointer) => {
                 click(pointer)
             })
+            var width = window.screen.width * window.devicePixelRatio
+            var height = window.screen.height * window.devicePixelRatio
+            dc.send({pcWidth: width, pcHeight: height})
         })
     })
 }
 
-/* Mouse Click (Single click) function */
+/* Mouse & Keyboard event execution function */
 const click = (command) => {
     if(typeof(command) === "object" && Object.keys(command).length === 3){
         console.log(typeof(command))
@@ -109,9 +115,4 @@ const click = (command) => {
             console.log('String updated !');
         });
     }
-}
-
-/* Message sender function */
-const send = () => {
-    dc.send('Message sent from Software')
 }
