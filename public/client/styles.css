@@ -43,7 +43,8 @@ video {
     z-index: 1;
 }
 
-#dragger, #toggleKeyboard {
+/* Icons */
+.far, .fas {
     padding: 8px;
     font-size: 20px;
     border: 1px solid black;
