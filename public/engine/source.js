@@ -101,7 +101,7 @@ const click = (command) => {
         console.log('X : ' + command.x)
         console.log('Y : ' + command.y)                    
         var mouseCoordinates = command.status + '|' + command.x + '|' + command.y
-        fs.writeFile('./interface/mouse_pointer.txt', mouseCoordinates, function (err) {
+        fs.writeFile('./mouse_pointer.txt', mouseCoordinates, function (err) {
             if (err) throw err;
             console.log('Mouse pointer updated !');
         });
@@ -110,7 +110,7 @@ const click = (command) => {
         console.log('Status :', command.status)
         console.log('Keys :', command.nmChar)
         var pencil = command.status + '|' + command.nmChar
-        fs.writeFile('./interface/key_events.txt', pencil, function (err) {
+        fs.writeFile('./key_events.txt', pencil, function (err) {
             if (err) throw err;
             console.log('String updated !');
         });
