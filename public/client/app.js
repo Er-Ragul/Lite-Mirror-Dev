@@ -69,12 +69,8 @@ const receiveShare = () => {
         console.log('Incoming Call')
         call.answer(null)
         call.on('stream', (stream) => {
-            count++
-            if(count === 2){
-                console.log(`Stream received for ${count} times`)
-                createDisplay(stream)
-                count = 0
-            }
+            console.log('Stream received')
+            createDisplay(stream)
         })
 
         dc.on('open', () => {
