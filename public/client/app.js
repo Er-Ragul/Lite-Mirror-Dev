@@ -4,7 +4,6 @@ let peer
 let dc
 let ms_width = 0
 let ms_height = 0
-let count = 0
 let mouseX
 let mouseY
 let dragPos = false
@@ -38,10 +37,9 @@ const startConnection = () => {
     if(token) { 
         console.log('You entered : ' + token)
         tokenBox.remove()
-        // Working here -------------------------------------------------------------------> //
         socket.emit('makeCall', token.toString(), window.innerWidth, window.innerHeight) 
         peer = new Peer(token.toString(), {
-            host: 'lite-mirror-dev.herokuapp.com',
+            host: 'localhost',
             port: 443,
             path: '/peerjs',
             secure: true,
@@ -49,7 +47,7 @@ const startConnection = () => {
                 'iceServers': [
                        { url: 'stun:stun1.l.google.com:19302' },
                        {
-                           url: 'turn:13.58.191.200:3478?transport=udp',
+                           url: 'turn:3.131.158.239:3478?transport=udp',
                            credential: 'ragul',
                            username: 'ragul'
                        }]
@@ -69,7 +67,7 @@ const receiveShare = () => {
         console.log('Incoming Call')
         call.answer(null)
         call.on('stream', (stream) => {
-            console.log('Stream received')
+            console.log('Stream Received')
             createDisplay(stream)
         })
 
@@ -141,19 +139,16 @@ source.addEventListener('touchmove', (e) => {
                                 // Keyboard Events //
 
 /* Keyboard event function */
-document.addEventListener('keypress', (e) => {
+document.addEventListener('keydown', (e) =>{
     console.log(e.key)
     try {
         if(e.key === 'Backspace'){
             dc.send({status: 'backspace', nmChar: e.key})
         }
-        else if(e.key === ' '){
-            dc.send({status: 'space', nmChar: e.key})
-        }
         else if (e.key === 'Enter'){
             dc.send({status: 'enter', nmChar: e.key})
           }
-        else {
+        else if(e.key !== 'Control') {
             dc.send({status: 'write', nmChar: e.key})
         }
     } catch (error) {
