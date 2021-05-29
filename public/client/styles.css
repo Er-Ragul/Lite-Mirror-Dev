@@ -49,3 +49,11 @@ video {
     font-size: 20px;
     border: 1px solid black;
 }
+
+.far:hover{
+    background-color: lightgray;
+}
+
+.fas:hover{
+    background-color: lightgray;
+}
