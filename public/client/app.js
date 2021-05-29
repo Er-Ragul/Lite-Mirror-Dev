@@ -165,52 +165,6 @@ document.addEventListener('keypress', (e) => {
     }
 })
 
-/* Shortcut event functions */
-document.addEventListener('keydown', (ev) =>{
-    if(ev.ctrlKey && ev.key === 's'){
-        let saveThat = {status: 'saveThat', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(saveThat)
-        console.log('captured ctrl+s')
-    }
-    ev.preventDefault()
-})
-
-document.addEventListener('keydown', (ev) =>{
-    if(ev.ctrlKey && ev.key === 'c'){
-        let copyThat = {status: 'copyThat', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(copyThat)
-        console.log('captured ctrl+c')
-    }
-    ev.preventDefault()
-})
-
-document.addEventListener('keydown', (ev) =>{
-    if(ev.ctrlKey && ev.key === 'x'){
-        let cutThat = {status: 'cutThat', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(cutThat)
-        console.log('captured ctrl+x')
-    }
-    ev.preventDefault()
-})
-
-document.addEventListener('keydown', (ev) =>{
-    if(ev.ctrlKey && ev.key === 'p'){
-        let pasteThat = {status: 'pasteThat', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(pasteThat)
-        console.log('captured ctrl+p')
-    }
-    ev.preventDefault()
-})
-
-document.addEventListener('keydown', (ev) =>{
-    if(ev.ctrlKey && ev.key === 'a'){
-        let selectThose = {status: 'selectThose', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(selectThose)
-        console.log('captured ctrl+a')
-    }
-    ev.preventDefault()
-})
-
 /* --------------------------------------------------------------------------------------------- */
                         //Virtual Keyboard Events for touch screen //
 
