@@ -66,7 +66,11 @@ function startShare(client_id, reqWidth, reqHeight){
             },
             cursor: 'never'
         }, 
-        audio: false
+        audio: {
+            mandatory: {
+                chromeMediaSource: 'desktop'
+            }
+        }
         })
         .then(stream => {
             peer.call(client_id, stream)
