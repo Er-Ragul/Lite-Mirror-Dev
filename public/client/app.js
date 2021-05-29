@@ -18,6 +18,7 @@ const toggle = document.getElementById('toggleKeyboard')
 const virtualKeys = document.getElementById('virtualKeyboard')
 const guester = document.getElementById('guester')
 const dragger = document.getElementById('dragger')
+const save = document.getElementById('save')
 const copy = document.getElementById('copy')
 const cut = document.getElementById('cut')
 const paste = document.getElementById('paste')
@@ -140,16 +141,78 @@ source.addEventListener('touchmove', (e) => {
     dc.send(moveCursor)
 })
 
+/* --------------------------------------------------------------------------------------------- */
+                                // Keyboard Events //
+
 /* Keyboard event function */
 document.addEventListener('keypress', (e) => {
     console.log(e.key)
     try {
-        dc.send({status: 'write', nmChar: e.key})
+        if(e.key === 'Backspace'){
+            dc.send({status: 'backspace', nmChar: e.key})
+        }
+        else if(e.key === ' '){
+            dc.send({status: 'space', nmChar: e.key})
+        }
+        else if (e.key === 'Enter'){
+            dc.send({status: 'enter', nmChar: e.key})
+          }
+        else {
+            dc.send({status: 'write', nmChar: e.key})
+        }
     } catch (error) {
         console.log('Peer not initiated')
     }
 })
 
+/* Shortcut event functions */
+document.addEventListener('keydown', (ev) =>{
+    if(ev.ctrlKey && ev.key === 's'){
+        let saveThat = {status: 'saveThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(saveThat)
+        console.log('captured ctrl+s')
+    }
+    ev.preventDefault()
+})
+
+document.addEventListener('keydown', (ev) =>{
+    if(ev.ctrlKey && ev.key === 'c'){
+        let copyThat = {status: 'copyThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(copyThat)
+        console.log('captured ctrl+c')
+    }
+    ev.preventDefault()
+})
+
+document.addEventListener('keydown', (ev) =>{
+    if(ev.ctrlKey && ev.key === 'x'){
+        let cutThat = {status: 'cutThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(cutThat)
+        console.log('captured ctrl+x')
+    }
+    ev.preventDefault()
+})
+
+document.addEventListener('keydown', (ev) =>{
+    if(ev.ctrlKey && ev.key === 'p'){
+        let pasteThat = {status: 'pasteThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(pasteThat)
+        console.log('captured ctrl+p')
+    }
+    ev.preventDefault()
+})
+
+document.addEventListener('keydown', (ev) =>{
+    if(ev.ctrlKey && ev.key === 'a'){
+        let selectThose = {status: 'selectThose', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(selectThose)
+        console.log('captured ctrl+a')
+    }
+    ev.preventDefault()
+})
+
+/* --------------------------------------------------------------------------------------------- */
+                        //Virtual Keyboard Events for touch screen //
 
 /* Virtual keyboard for Touch Devices */
 toggle.addEventListener('click', () => {
@@ -244,6 +307,11 @@ dragger.addEventListener('click', () => {
     }
 })
 
+save.addEventListener('click', () => {
+    let saveThat = {status: 'saveThat', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(saveThat)
+})
+
 copy.addEventListener('click', () => {
     copy.style.backgroundColor = 'lightgray'
     let copyThat = {status: 'copyThat', x: Math.round(mouseX), y: Math.round(mouseY)}
@@ -264,7 +332,6 @@ paste.addEventListener('click', () => {
 })
 
 selectAll.addEventListener('click', () => {
-    selectAll.style.backgroundColor = 'lightgray'
     let selectThose = {status: 'selectThose', x: Math.round(mouseX), y: Math.round(mouseY)}
     dc.send(selectThose)
 })
