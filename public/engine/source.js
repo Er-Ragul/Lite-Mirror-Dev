@@ -1,5 +1,4 @@
 /* Global Variables */
-let displaySource
 let peer
 let dc
 let softwareId
@@ -10,16 +9,6 @@ let socket = io.connect('/')
 const { desktopCapturer } = require('electron')
 const fs = require('fs')
 const { type } = require('os')
-desktopCapturer.getSources({ types: ['window', 'screen'] })
-    .then(sources => {
-        for(i=0; i<sources.length; i++){
-            if(sources[i].name === 'Entire Screen'){
-                displaySource = sources[i].id
-            }
-        }
-    })
-    .catch(e => console.log(e))
-
 
 /* Socket callback events for peer to peer connectivity */
 socket.on('YourId', (myId) => {
@@ -30,13 +19,13 @@ socket.on('YourId', (myId) => {
     peer = new Peer(peerid, {
         host: 'lite-mirror-dev.herokuapp.com',
         port: 443,
-	    path: '/peerjs',
+	path: '/peerjs',
         secure: true,
         config: {
             'iceServers': [
                    { url: 'stun:stun1.l.google.com:19302' },
                    {
-                       url: 'turn:13.58.191.200:3478?transport=udp',
+                       url: 'turn:3.131.158.239:3478?transport=udp',
                        credential: 'ragul',
                        username: 'ragul'
                    }]
@@ -60,13 +49,16 @@ function startShare(client_id, reqWidth, reqHeight){
         {
             mandatory: {              
                 chromeMediaSource: 'desktop',
-                chromeMediaSourceId: displaySource,
                 maxWidth: 1920,
                 maxHeight: 1080
             },
             cursor: 'never'
         }, 
-        audio: false
+        audio: {
+            mandatory: {
+                chromeMediaSource: 'desktop'
+            }
+        }
         })
         .then(stream => {
             peer.call(client_id, stream)
