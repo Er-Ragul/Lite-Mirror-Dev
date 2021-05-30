@@ -45,25 +45,39 @@ socket.on('makeClientCall', (client_id, cliWidth, cliHeight) => {
 /* Function to call client with media stream  ---> step : 2 */
 function startShare(client_id, reqWidth, reqHeight){
     console.log('Media : ', reqWidth, reqHeight)
-    navigator.mediaDevices.getUserMedia({video: 
-        {
-            mandatory: {              
-                chromeMediaSource: 'desktop',
-                maxWidth: 1920,
-                maxHeight: 1080
-            },
-            cursor: 'never'
-        }, 
-        audio: {
-            mandatory: {
-                chromeMediaSource: 'desktop'
+    desktopCapturer.getSources({ types: ['window', 'screen'] })
+    .then(sources => {
+        for(i=0; i<sources.length; i++){
+            if(sources[i].name === 'Entire Screen'){
+                displaySource = sources[i].id
+                try{
+                    navigator.mediaDevices.getUserMedia({video: 
+                        {
+                            mandatory: {              
+                                chromeMediaSource: 'desktop',
+                                maxWidth: 1920,
+                                maxHeight: 1080
+                            },
+                            cursor: 'never'
+                        }, 
+                        audio: {
+                            mandatory: {
+                                chromeMediaSource: 'desktop'
+                            }
+                        }
+                        })
+                        .then(stream => {
+                            peer.call(client_id, stream)
+                        })
+                        .catch(e => console.log(e))
+                }
+                catch (e){
+                    console.log('Error inside Navigator : ', e)
+                }
             }
         }
-        })
-        .then(stream => {
-            peer.call(client_id, stream)
-        })
-        .catch(e => console.log(e))
+    })
+    .catch(e => console.log('Error outside Navigator : ', e))
 }
 
 /* Function to receive data's (mouse coordinates) from client */
