@@ -147,8 +147,26 @@ document.addEventListener('keydown', (e) =>{
         }
         else if (e.key === 'Enter'){
             dc.send({status: 'enter', nmChar: e.key})
-          }
-        else if(e.key !== 'Control') {
+        }
+        else if(e.key === 'CapsLock'){
+            dc.send({status: 'capslock', numChar: e.key})
+        }
+        else if(e.key === 'ArrowLeft'){
+            dc.send({status: 'left', numChar: e.key})   
+        }
+        else if(e.key === 'ArrowRight'){
+            dc.send({status: 'right', numChar: e.key})   
+        }
+        else if(e.key === 'ArrowUp'){
+            dc.send({status: 'up', numChar: e.key})   
+        }
+        else if(e.key === 'ArrowDown'){
+            dc.send({status: 'down', numChar: e.key})   
+        }
+        else if(e.key === 'Tab'){
+            dc.send({status: 'tab', numChar: e.key})   
+        }
+        else if(e.key !== 'Control' || e.key !== 'Shift') {
             dc.send({status: 'write', nmChar: e.key})
         }
     } catch (error) {
