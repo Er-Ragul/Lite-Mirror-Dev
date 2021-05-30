@@ -25,7 +25,7 @@ socket.on('YourId', (myId) => {
             'iceServers': [
                    { url: 'stun:stun1.l.google.com:19302' },
                    {
-                       url: 'turn:3.17.63.136:3478?transport=udp',
+                       url: 'turn:3.15.46.79:3478?transport=udp',
                        credential: 'ragul',
                        username: 'ragul'
                    }]
