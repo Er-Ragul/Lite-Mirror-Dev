@@ -47,7 +47,7 @@ const startConnection = () => {
                 'iceServers': [
                        { url: 'stun:stun1.l.google.com:19302' },
                        {
-                           url: 'turn:3.15.46.79:3478?transport=udp',
+                           url: 'turn:3.137.186.17:3478?transport=udp',
                            credential: 'ragul',
                            username: 'ragul'
                        }]
