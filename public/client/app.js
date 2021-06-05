@@ -8,6 +8,7 @@ let mouseX
 let mouseY
 let dragPos = false
 let keyboardStatus = false
+let down = false
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -47,7 +48,7 @@ const startConnection = () => {
                 'iceServers': [
                        { url: 'stun:stun1.l.google.com:19302' },
                        {
-                           url: 'turn:3.137.186.17:3478?transport=udp',
+                           url: 'turn:3.131.158.239:3478?transport=udp',
                            credential: 'ragul',
                            username: 'ragul'
                        }]
@@ -117,59 +118,177 @@ source.addEventListener('dblclick', (e) => {
     dc.send(pointerClick)
 })
 
+/* Mouse down event function */
+source.addEventListener('mousedown', (e) => {
+    dragPos = true
+    let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(mouseDown)
+})
+
+source.addEventListener('mousemove', (e) => {
+    if(dragPos){
+        let posX = source.offsetLeft
+        let posY = source.offsetTop
+        let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
+        let tempY = (e.touches[0].pageY - posY) / window.innerHeight * 100
+        /*-----------------------------*/
+        mouseX = tempX / 100 * ms_width
+        mouseY = tempY / 100 * ms_height
+        /*-----------------------------*/
+        let moveCursor = {status: 'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(moveCursor)
+    }
+})
+
+/* Mouse Up event */
+source.addEventListener('mouseup', (e) => {
+    dragPos = false
+    let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(mouseUp)
+})
+
 /* --------------------------------------------------------------------------------------------- */
                                 // Touch Events //
 
+/* Touch down event function */
+source.addEventListener('touchstart', (e) => {
+    dragPos = true
+    let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(mouseDown)
+})
 
 /* Touch cursor move & drag event function */
 source.addEventListener('touchmove', (e) => {
-    let posX = source.offsetLeft
-    let posY = source.offsetTop
-    let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
-    let tempY = (e.touches[0].pageY - posY) / window.innerHeight * 100
-    /*-----------------------------*/
-    mouseX = tempX / 100 * ms_width
-    mouseY = tempY / 100 * ms_height
-    /*-----------------------------*/
-    let moveCursor = {status: 'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-    dc.send(moveCursor)
+    if(dragPos){
+        let posX = source.offsetLeft
+        let posY = source.offsetTop
+        let tempX = (e.touches[0].pageX - posX) / window.innerWidth * 100 
+        let tempY = (e.touches[0].pageY - posY) / window.innerHeight * 100
+        /*-----------------------------*/
+        mouseX = tempX / 100 * ms_width
+        mouseY = tempY / 100 * ms_height
+        /*-----------------------------*/
+        let moveCursor = {status: 'moveTo', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(moveCursor)
+    }
+})
+
+source.addEventListener('touchend', (e) => {
+    dragPos = false
+    let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
+    dc.send(mouseUp)
 })
 
 /* --------------------------------------------------------------------------------------------- */
                                 // Keyboard Events //
 
+/* Keyboard event for characters */
+document.addEventListener('keypress', (e) => {
+    try {
+        if(!down){
+            if(e.key === 'Enter'){
+                dc.send({status: 'enter', nmChar: e.key})
+            }
+            else {
+                dc.send({status: 'write', nmChar: e.key})
+            }
+        }
+    }
+    catch (e) {
+        console.log('Peer not initiated')
+    }
+})
+
 /* Keyboard event function */
 document.addEventListener('keydown', (e) =>{
-    console.log(e.key)
     try {
-        if(e.key === 'Backspace'){
-            dc.send({status: 'backspace', nmChar: e.key})
-        }
-        else if (e.key === 'Enter'){
-            dc.send({status: 'enter', nmChar: e.key})
-        }
-        else if(e.key === 'CapsLock'){
-            dc.send({status: 'capslock', numChar: e.key})
-        }
-        else if(e.key === 'ArrowLeft'){
-            dc.send({status: 'left', numChar: e.key})   
-        }
-        else if(e.key === 'ArrowRight'){
-            dc.send({status: 'right', numChar: e.key})   
-        }
-        else if(e.key === 'ArrowUp'){
-            dc.send({status: 'up', numChar: e.key})   
-        }
-        else if(e.key === 'ArrowDown'){
-            dc.send({status: 'down', numChar: e.key})   
-        }
-        else if(e.key === 'Tab'){
-            dc.send({status: 'tab', numChar: e.key})   
-        }
-        else if(e.key !== 'Control' || e.key !== 'Shift') {
-            dc.send({status: 'write', nmChar: e.key})
-        }
-    } catch (error) {
+        if(e.ctrlKey){
+            down = true
+            if(e.ctrlKey && e.key === 's'){
+                dc.send({status: 'saveThat', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'c'){
+                dc.send({status: 'copyThat', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'x'){
+                dc.send({status: 'cutThat', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'v'){
+                dc.send({status: 'pasteThat', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'a'){
+                dc.send({status: 'selectThose', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'z'){
+                dc.send({status: 'undoThat', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'b'){
+                dc.send({status: 'boldTxt', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'i'){
+                dc.send({status: 'italicTxt', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'u'){
+                dc.send({status: 'underTxt', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+            else if(e.ctrlKey && e.key === 'p'){
+                dc.send({status: 'printThat', numChar: e.key})
+                if(down === true){
+                    e.preventDefault()
+                }
+            }
+          }
+          else if(e.key === 'Backspace'){
+              dc.send({status: 'backspace', numChar: e.key})
+          }
+          else if(e.key === 'CapsLock'){
+              dc.send({status: 'capslock', numChar: e.key})
+          }
+          else if(e.key === 'ArrowLeft'){
+              dc.send({status: 'left', numChar: e.key})   
+          }
+          else if(e.key === 'ArrowRight'){
+              dc.send({status: 'right', numChar: e.key})   
+          }
+          else if(e.key === 'ArrowUp'){
+              dc.send({status: 'up', numChar: e.key})   
+          }
+          else if(e.key === 'ArrowDown'){
+              dc.send({status: 'down', numChar: e.key})   
+          }
+          else if(e.key === 'Tab'){
+              dc.send({status: 'tab', numChar: e.key})   
+          }
+          down = false
+    }
+    catch (e) {
         console.log('Peer not initiated')
     }
 })
@@ -255,20 +374,20 @@ guester.addEventListener('touchend', (e) => {
 
 
 /* Drag icon event */
-dragger.addEventListener('click', () => {
-    if(!dragPos){
-        dragger.style.backgroundColor = 'lightgray'
-        let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(dragSet)
-        dragPos = true
-    }
-    else if(dragPos){
-        dragger.style.backgroundColor = 'white'
-        let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-        dc.send(dragTo)
-        dragPos = false
-    }
-})
+// dragger.addEventListener('click', () => {
+//     if(!dragPos){
+//         dragger.style.backgroundColor = 'lightgray'
+//         let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
+//         dc.send(dragSet)
+//         dragPos = true
+//     }
+//     else if(dragPos){
+//         dragger.style.backgroundColor = 'white'
+//         let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
+//         dc.send(dragTo)
+//         dragPos = false
+//     }
+// })
 
 save.addEventListener('click', () => {
     let saveThat = {status: 'saveThat', x: Math.round(mouseX), y: Math.round(mouseY)}
