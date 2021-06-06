@@ -148,6 +148,7 @@ source.addEventListener('mousemove', (e) => {
 
 /* Mouse Up event */
 source.addEventListener('mouseup', (e) => {
+      console.log('Mouse up & dragPos :', dragPos)
       if(dragPos){
         clearInterval(timer)
         let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
