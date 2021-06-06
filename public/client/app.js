@@ -144,9 +144,11 @@ source.addEventListener('mousemove', (e) => {
 
 /* Mouse Up event */
 source.addEventListener('mouseup', (e) => {
-    dragPos = false
-    let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
-    dc.send(mouseUp)
+      if(dragPos){
+        let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(mouseUp)
+        dragPos = false
+      }
 })
 
 /* --------------------------------------------------------------------------------------------- */
@@ -179,9 +181,11 @@ source.addEventListener('touchmove', (e) => {
 })
 
 source.addEventListener('touchend', (e) => {
-    dragPos = false
-    let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
-    dc.send(mouseUp)
+      if(dragPos){
+        let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(mouseUp)
+        dragPos = false
+      }
 })
 
 /* --------------------------------------------------------------------------------------------- */
