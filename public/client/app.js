@@ -105,10 +105,10 @@ source.addEventListener('click', (e) => {
     mouseX = tempX / 100 * ms_width
     mouseY = tempY / 100 * ms_height
     /*-----------------------------*/
-    
     let click = {status:'click', x: Math.round(mouseX), y: Math.round(mouseY)}
     console.log(click)
     dc.send(click)
+    dragPos = true
 })
 
 /* Mouse double click event function */
@@ -119,7 +119,6 @@ source.addEventListener('dblclick', (e) => {
 
 /* Mouse down event function */
 source.addEventListener('mousedown', (e) => {
-    dragPos = true
     let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
     dc.send(mouseDown)
 })
