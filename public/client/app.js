@@ -130,7 +130,6 @@ source.addEventListener('mousedown', (e) => {
 })
 
 source.addEventListener('mousemove', (e) => {
-    console.log('Mouse Move :', dragPos)
     if(dragPos){
         clearInterval(timer)
         let posX = source.offsetLeft
@@ -150,7 +149,6 @@ source.addEventListener('mousemove', (e) => {
 source.addEventListener('mouseup', (e) => {
       clearInterval(timer)
       dragPos = false
-      console.log('Mouse up & dragPos :', dragPos)
       if(dragPos){
         let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
         dc.send(mouseUp)
@@ -172,7 +170,6 @@ source.addEventListener('touchstart', (e) => {
 
 /* Touch cursor move & drag event function */
 source.addEventListener('touchmove', (e) => {
-    console.log('Mouse Move :', dragPos)
     if(dragPos){
         clearInterval(timer)
         let posX = source.offsetLeft
@@ -191,7 +188,6 @@ source.addEventListener('touchmove', (e) => {
 source.addEventListener('touchend', (e) => {
       clearInterval(timer)
       dragPos = false
-      console.log('Mouse up & dragPos :', dragPos)
       if(dragPos){
         let mouseUp = {status: 'mouseUp', x: Math.round(mouseX), y: Math.round(mouseY)}
         dc.send(mouseUp)
