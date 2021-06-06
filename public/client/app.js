@@ -17,7 +17,6 @@ const tokenBox = document.getElementById('tokenBox')
 const toggle = document.getElementById('toggleKeyboard')
 const virtualKeys = document.getElementById('virtualKeyboard')
 const guester = document.getElementById('guester')
-const dragger = document.getElementById('dragger')
 const save = document.getElementById('save')
 const copy = document.getElementById('copy')
 const cut = document.getElementById('cut')
@@ -40,7 +39,7 @@ const startConnection = () => {
         tokenBox.remove()
         socket.emit('makeCall', token.toString(), window.innerWidth, window.innerHeight) 
         peer = new Peer(token.toString(), {
-            host: 'lite-mirror-dev.herokuapp.com',
+            host: 'localhost',
             port: 443,
             path: '/peerjs',
             secure: true,
@@ -189,7 +188,7 @@ document.addEventListener('keypress', (e) => {
             if(e.key === 'Enter'){
                 dc.send({status: 'enter', nmChar: e.key})
             }
-            else {
+            else if(e.key !== ' ') {
                 dc.send({status: 'write', nmChar: e.key})
             }
         }
@@ -264,6 +263,9 @@ document.addEventListener('keydown', (e) =>{
                     e.preventDefault()
                 }
             }
+          }
+          else if (button === ' '){
+            dc.send({status: 'space', nmChar: button})
           }
           else if(e.key === 'Backspace'){
               dc.send({status: 'backspace', numChar: e.key})
@@ -371,23 +373,6 @@ guester.addEventListener('touchmove', (e) => {
 guester.addEventListener('touchend', (e) => {
     guestFocus = false
 })
-
-
-/* Drag icon event */
-// dragger.addEventListener('click', () => {
-//     if(!dragPos){
-//         dragger.style.backgroundColor = 'lightgray'
-//         let dragSet = {status: 'dragSet', x: Math.round(mouseX), y: Math.round(mouseY)}
-//         dc.send(dragSet)
-//         dragPos = true
-//     }
-//     else if(dragPos){
-//         dragger.style.backgroundColor = 'white'
-//         let dragTo = {status: 'dragTo', x: Math.round(mouseX), y: Math.round(mouseY)}
-//         dc.send(dragTo)
-//         dragPos = false
-//     }
-// })
 
 save.addEventListener('click', () => {
     let saveThat = {status: 'saveThat', x: Math.round(mouseX), y: Math.round(mouseY)}
