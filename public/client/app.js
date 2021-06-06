@@ -9,6 +9,7 @@ let mouseY
 let dragPos = false
 let keyboardStatus = false
 let down = false
+let timer
 
 /* Import or Initilization */
 const socket = io.connect('/')
@@ -39,7 +40,7 @@ const startConnection = () => {
         tokenBox.remove()
         socket.emit('makeCall', token.toString(), window.innerWidth, window.innerHeight) 
         peer = new Peer(token.toString(), {
-            host: 'lite-mirror-dev.herokuapp.com',
+            host: 'localhost',
             port: 443,
             path: '/peerjs',
             secure: true,
@@ -108,7 +109,6 @@ source.addEventListener('click', (e) => {
     let click = {status:'click', x: Math.round(mouseX), y: Math.round(mouseY)}
     console.log(click)
     dc.send(click)
-    dragPos = true
 })
 
 /* Mouse double click event function */
@@ -119,8 +119,12 @@ source.addEventListener('dblclick', (e) => {
 
 /* Mouse down event function */
 source.addEventListener('mousedown', (e) => {
-    let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
-    dc.send(mouseDown)
+    timer = setInterval(() => {
+        clearInterval(timer)
+        dragPos = true
+        let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(mouseDown)
+    }, 2000)
 })
 
 source.addEventListener('mousemove', (e) => {
@@ -150,9 +154,12 @@ source.addEventListener('mouseup', (e) => {
 
 /* Touch down event function */
 source.addEventListener('touchstart', (e) => {
-    dragPos = true
-    let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
-    dc.send(mouseDown)
+    timer = setInterval(() => {
+        clearInterval(timer)
+        dragPos = true
+        let mouseDown = {status: 'mouseDown', x: Math.round(mouseX), y: Math.round(mouseY)}
+        dc.send(mouseDown)
+    }, 2000)
 })
 
 /* Touch cursor move & drag event function */
