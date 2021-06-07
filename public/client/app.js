@@ -282,27 +282,51 @@ document.addEventListener('keydown', (e) =>{
           }
           else if (button === ' '){
             dc.send({status: 'space', nmChar: button})
+            if(down === true){
+                e.preventDefault()
+            }
           }
           else if(e.key === 'Backspace'){
               dc.send({status: 'backspace', numChar: e.key})
+              if(down === true){
+                e.preventDefault()
+              }
           }
           else if(e.key === 'CapsLock'){
               dc.send({status: 'capslock', numChar: e.key})
+              if(down === true){
+                e.preventDefault()
+              }
           }
           else if(e.key === 'ArrowLeft'){
               dc.send({status: 'left', numChar: e.key})   
+              if(down === true){
+                e.preventDefault()
+              }
           }
           else if(e.key === 'ArrowRight'){
               dc.send({status: 'right', numChar: e.key})   
+              if(down === true){
+                e.preventDefault()
+              }
           }
           else if(e.key === 'ArrowUp'){
               dc.send({status: 'up', numChar: e.key})   
+              if(down === true){
+                e.preventDefault()
+              }
           }
           else if(e.key === 'ArrowDown'){
-              dc.send({status: 'down', numChar: e.key})   
+              dc.send({status: 'down', numChar: e.key})  
+              if(down === true){
+                e.preventDefault()
+              } 
           }
           else if(e.key === 'Tab'){
               dc.send({status: 'tab', numChar: e.key})   
+              if(down === true){
+                e.preventDefault()
+              }
           }
           down = false
     }
