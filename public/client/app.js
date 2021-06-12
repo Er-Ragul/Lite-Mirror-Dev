@@ -287,6 +287,7 @@ document.addEventListener('keydown', (e) =>{
             }
           }
           else if(e.key === 'Backspace'){
+              console.log('Backspace is pressed')
               dc.send({status: 'backspace', numChar: e.key})
           }
           else if(e.key === 'CapsLock'){
