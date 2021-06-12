@@ -288,9 +288,6 @@ document.addEventListener('keydown', (e) =>{
           }
           else if(e.key === 'Backspace'){
               dc.send({status: 'backspace', numChar: e.key})
-              if(down === true){
-                e.preventDefault()
-              }
           }
           else if(e.key === 'CapsLock'){
               dc.send({status: 'capslock', numChar: e.key})
